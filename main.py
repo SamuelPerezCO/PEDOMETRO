@@ -1,7 +1,22 @@
 import tkinter as tk
 
+# Contador para los peos
+contador_peos_hoy = 0
+
 def contar_peo():
-    print("me tire un peo")
+    global contador_peos_hoy
+    contador_peos_hoy += 1  # Incrementa el contador
+    entrada_peos_hoy.delete(0, tk.END)  # Limpia el campo de entrada
+    entrada_peos_hoy.insert(0, str(contador_peos_hoy))  # Muestra el nuevo valor
+
+    entrada_peos_semana.delete(0, tk.END)
+    entrada_peos_semana.insert(0 , str(contador_peos_hoy))
+
+    entrada_peos_mes.delete(0, tk.END)
+    entrada_peos_mes.insert(0, str(contador_peos_hoy))
+
+    entrada_peos_ano.delete(0, tk.END)
+    entrada_peos_ano.insert(0, str(contador_peos_hoy))
 
 # Crear la ventana principal
 ventana = tk.Tk()
@@ -18,7 +33,7 @@ frame_entrada_peos_hoy = tk.Frame(ventana, bg="#e0f7fa")  # Fondo del frame
 frame_entrada_peos_hoy.pack(pady=5)
 
 # Etiqueta "Peos hoy"
-etiqueta_peos_hoy = tk.Label(frame_entrada_peos_hoy, text="Peos hoy:", bg="#e0f7fa", fg="#004d40" , font=("Arial", 14))
+etiqueta_peos_hoy = tk.Label(frame_entrada_peos_hoy, text="Peos hoy:", bg="#e0f7fa", fg="#004d40", font=("Arial", 14))
 etiqueta_peos_hoy.pack(side="left")
 
 # Campo de entrada
@@ -29,7 +44,7 @@ entrada_peos_hoy.pack(side="right")
 frame_entrada_peos_semana = tk.Frame(ventana, bg="#e0f7fa")
 frame_entrada_peos_semana.pack(pady=5)
 
-etiqueta_peos_semana = tk.Label(frame_entrada_peos_semana, text="Peos Semana:", bg="#e0f7fa", fg="#004d40" , font=("Arial", 14))
+etiqueta_peos_semana = tk.Label(frame_entrada_peos_semana, text="Peos Semana:", bg="#e0f7fa", fg="#004d40", font=("Arial", 14))
 etiqueta_peos_semana.pack(side="left")
 
 entrada_peos_semana = tk.Entry(frame_entrada_peos_semana, bg="white", fg="black")
@@ -39,7 +54,7 @@ entrada_peos_semana.pack(side="right")
 frame_entrada_peos_mes = tk.Frame(ventana, bg="#e0f7fa")
 frame_entrada_peos_mes.pack(pady=5)
 
-etiqueta_peos_mes = tk.Label(frame_entrada_peos_mes, text="Peos mes:", bg="#e0f7fa", fg="#004d40" , font=("Arial", 14))
+etiqueta_peos_mes = tk.Label(frame_entrada_peos_mes, text="Peos mes:", bg="#e0f7fa", fg="#004d40", font=("Arial", 14))
 etiqueta_peos_mes.pack(side="left")
 
 entrada_peos_mes = tk.Entry(frame_entrada_peos_mes, bg="white", fg="black")
@@ -49,14 +64,21 @@ entrada_peos_mes.pack(side="right")
 frame_entrada_peos_ano = tk.Frame(ventana, bg="#e0f7fa")
 frame_entrada_peos_ano.pack(pady=5)
 
-etiqueta_peos_ano = tk.Label(frame_entrada_peos_ano, text="Peos año:", bg="#e0f7fa", fg="#004d40" , font=("Arial", 14))
+etiqueta_peos_ano = tk.Label(frame_entrada_peos_ano, text="Peos año:", bg="#e0f7fa", fg="#004d40", font=("Arial", 14))
 etiqueta_peos_ano.pack(side="left")
 
 entrada_peos_ano = tk.Entry(frame_entrada_peos_ano, bg="white", fg="black")
 entrada_peos_ano.pack(side="right")
 
 # Botón
-boton = tk.Button(ventana, text="¡ME TIRE UN PEDO!", bg="#00796b", fg="white", font=("Arial", 10, "bold") , command=contar_peo)
+boton = tk.Button(
+    ventana, 
+    text="¡ME TIRE UN PEDO!", 
+    bg="#00796b", 
+    fg="white", 
+    font=("Arial", 10, "bold"), 
+    command=contar_peo
+)
 boton.pack(pady=20)
 
 # Iniciar el bucle principal
