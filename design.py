@@ -1,5 +1,8 @@
 import tkinter as tk
-import funciones
+
+def contar_peo():
+    print("me tire un peo")
+
 # Crear la ventana principal
 ventana = tk.Tk()
 ventana.title("PEDOMETRO")
@@ -53,7 +56,7 @@ entrada_peos_ano = tk.Entry(frame_entrada_peos_ano, bg="white", fg="black")
 entrada_peos_ano.pack(side="right")
 
 # Botón
-boton = tk.Button(ventana, text="¡ME TIRE UN PEDO!", bg="#00796b", fg="white", font=("Arial", 10, "bold"))
+boton = tk.Button(ventana, text="¡ME TIRE UN PEDO!", bg="#00796b", fg="white", font=("Arial", 10, "bold") , command=contar_peo)
 boton.pack(pady=20)
 
 # Iniciar el bucle principal
