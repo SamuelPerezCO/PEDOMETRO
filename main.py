@@ -14,8 +14,14 @@ contador_peos_semana = datos['peos_semana'] if datos else 0
 contador_peos_mes = datos['peos_mes'] if datos else 0
 contador_peos_ano = datos['peos_ano'] if datos else 0
 
-# Función para contar un "peo"
 def contar_peo():
+    """
+    Incrementa los contadores de "peos" y actualiza la interfaz gráfica con los nuevos valores.
+    
+    Esta función incrementa los valores de los contadores de peos en el día, semana, mes y año. 
+    Después de incrementar los contadores, los nuevos valores se muestran en la interfaz gráfica 
+    y se guardan en la base de datos.
+    """
     global contador_peos_hoy, contador_peos_semana, contador_peos_mes, contador_peos_ano
 
     # Incrementa los peo_contadores
