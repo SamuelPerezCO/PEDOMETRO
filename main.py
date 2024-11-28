@@ -1,44 +1,75 @@
 import tkinter as tk
+from db_manager import inicializar_bd, obtener_peo_contadores, actualizar_peo_contadores, obtener_usuario_actual
 
-# Contador para los peos
-contador_peos_hoy = 0
+# Inicializar la base de datos
+inicializar_bd()
 
+# Obtener el usuario conectado
+usuario_actual = obtener_usuario_actual()
+
+# Obtener los peo_contadores iniciales desde la base de datos
+datos = obtener_peo_contadores()
+contador_peos_hoy = datos['peos_dia'] if datos else 0
+contador_peos_semana = datos['peos_semana'] if datos else 0
+contador_peos_mes = datos['peos_mes'] if datos else 0
+contador_peos_ano = datos['peos_ano'] if datos else 0
+
+# Función para contar un "peo"
 def contar_peo():
-    global contador_peos_hoy
-    contador_peos_hoy += 1  # Incrementa el contador
-    entrada_peos_hoy.delete(0, tk.END)  # Limpia el campo de entrada
-    entrada_peos_hoy.insert(0, str(contador_peos_hoy))  # Muestra el nuevo valor
+    global contador_peos_hoy, contador_peos_semana, contador_peos_mes, contador_peos_ano
+
+    # Incrementa los peo_contadores
+    contador_peos_hoy += 1
+    contador_peos_semana += 1
+    contador_peos_mes += 1
+    contador_peos_ano += 1
+
+    # Actualizar los campos en la interfaz
+    entrada_peos_hoy.delete(0, tk.END)
+    entrada_peos_hoy.insert(0, str(contador_peos_hoy))
 
     entrada_peos_semana.delete(0, tk.END)
-    entrada_peos_semana.insert(0 , str(contador_peos_hoy))
+    entrada_peos_semana.insert(0, str(contador_peos_semana))
 
     entrada_peos_mes.delete(0, tk.END)
-    entrada_peos_mes.insert(0, str(contador_peos_hoy))
+    entrada_peos_mes.insert(0, str(contador_peos_mes))
 
     entrada_peos_ano.delete(0, tk.END)
-    entrada_peos_ano.insert(0, str(contador_peos_hoy))
+    entrada_peos_ano.insert(0, str(contador_peos_ano))
 
-# Crear la ventana principal
+    # Guardar los nuevos peo_contadores en la base de datos
+    actualizar_peo_contadores(contador_peos_hoy, contador_peos_semana, contador_peos_mes, contador_peos_ano)
+
+# Crear la ventana principal de la aplicación
 ventana = tk.Tk()
 ventana.title("PEDOMETRO")
-ventana.geometry("300x270")
+ventana.geometry("300x300")
 ventana.config(bg="#e0f7fa")  # Color de fondo de la ventana
+
+# Mostrar el usuario conectado en la interfaz
+etiqueta_usuario = tk.Label(
+    ventana,
+    text=f"Conectado como: {usuario_actual}",
+    bg="#e0f7fa",
+    fg="#004d40",
+    font=("Arial", 10)
+)
+etiqueta_usuario.pack(pady=5)
 
 # Etiqueta principal
 etiqueta = tk.Label(ventana, text="PEDOMETRO", bg="#006064", fg="white", font=("Arial", 14))
 etiqueta.pack(pady=10)
 
 # Frame para la etiqueta "Peos hoy" y el campo de entrada
-frame_entrada_peos_hoy = tk.Frame(ventana, bg="#e0f7fa")  # Fondo del frame
+frame_entrada_peos_hoy = tk.Frame(ventana, bg="#e0f7fa")  
 frame_entrada_peos_hoy.pack(pady=5)
 
-# Etiqueta "Peos hoy"
 etiqueta_peos_hoy = tk.Label(frame_entrada_peos_hoy, text="Peos hoy:", bg="#e0f7fa", fg="#004d40", font=("Arial", 14))
 etiqueta_peos_hoy.pack(side="left")
 
-# Campo de entrada
 entrada_peos_hoy = tk.Entry(frame_entrada_peos_hoy, bg="white", fg="black")
 entrada_peos_hoy.pack(side="right")
+entrada_peos_hoy.insert(0, str(contador_peos_hoy))
 
 # Peos Semana
 frame_entrada_peos_semana = tk.Frame(ventana, bg="#e0f7fa")
@@ -49,6 +80,7 @@ etiqueta_peos_semana.pack(side="left")
 
 entrada_peos_semana = tk.Entry(frame_entrada_peos_semana, bg="white", fg="black")
 entrada_peos_semana.pack(side="right")
+entrada_peos_semana.insert(0, str(contador_peos_semana))
 
 # Peos Mes
 frame_entrada_peos_mes = tk.Frame(ventana, bg="#e0f7fa")
@@ -59,6 +91,7 @@ etiqueta_peos_mes.pack(side="left")
 
 entrada_peos_mes = tk.Entry(frame_entrada_peos_mes, bg="white", fg="black")
 entrada_peos_mes.pack(side="right")
+entrada_peos_mes.insert(0, str(contador_peos_mes))
 
 # Peos Año
 frame_entrada_peos_ano = tk.Frame(ventana, bg="#e0f7fa")
@@ -69,17 +102,18 @@ etiqueta_peos_ano.pack(side="left")
 
 entrada_peos_ano = tk.Entry(frame_entrada_peos_ano, bg="white", fg="black")
 entrada_peos_ano.pack(side="right")
+entrada_peos_ano.insert(0, str(contador_peos_ano))
 
-# Botón
+# Botón para incrementar el contador
 boton = tk.Button(
-    ventana, 
-    text="¡ME TIRE UN PEDO!", 
-    bg="#00796b", 
-    fg="white", 
-    font=("Arial", 10, "bold"), 
+    ventana,
+    text="¡ME TIRÉ UN PEDO!",
+    bg="#00796b",
+    fg="white",
+    font=("Arial", 10, "bold"),
     command=contar_peo
 )
 boton.pack(pady=20)
 
-# Iniciar el bucle principal
+# Iniciar el bucle principal de la interfaz gráfica
 ventana.mainloop()
