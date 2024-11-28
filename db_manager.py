@@ -18,13 +18,6 @@ def conectar():
     return mysql.connector.connect(**DB_CONFIG)
 
 def inicializar_bd():
-    """
-    Inicializa la base de datos creando la tabla 'peo_contadores' si no existe.
-
-    Esta función crea la tabla 'peo_contadores' en la base de datos con las columnas 
-    para almacenar los contadores de peos del día, semana, mes y año.
-    Si la tabla ya existe, no realiza ninguna acción.
-    """
     conn = conectar()
     cursor = conn.cursor()
     cursor.execute('''
@@ -33,9 +26,33 @@ def inicializar_bd():
         peos_dia INT DEFAULT 0,
         peos_semana INT DEFAULT 0,
         peos_mes INT DEFAULT 0,
-        peos_ano INT DEFAULT 0
+        peos_ano INT DEFAULT 0,
+        ultima_actualizacion DATE
     )
     ''')
+    # Si la tabla es nueva, inserta el registro inicial con la fecha actual
+    cursor.execute('SELECT COUNT(*) FROM peo_contadores')
+    if cursor.fetchone()[0] == 0:
+        cursor.execute('''
+        INSERT INTO peo_contadores (peos_dia, peos_semana, peos_mes, peos_ano, ultima_actualizacion)
+        VALUES (0, 0, 0, 0, CURDATE())
+        ''')
+    conn.commit()
+    conn.close()
+
+
+def obtener_ultima_actualizacion():
+    conn = conectar()
+    cursor = conn.cursor()
+    cursor.execute('SELECT ultima_actualizacion FROM peo_contadores WHERE id = 1')
+    fecha = cursor.fetchone()
+    conn.close()
+    return fecha[0] if fecha else None
+
+def actualizar_fecha_actualizacion(fecha_actual):
+    conn = conectar()
+    cursor = conn.cursor()
+    cursor.execute('UPDATE peo_contadores SET ultima_actualizacion = %s WHERE id = 1', (fecha_actual,))
     conn.commit()
     conn.close()
 

@@ -1,5 +1,6 @@
 import tkinter as tk
-from db_manager import inicializar_bd, obtener_peo_contadores, actualizar_peo_contadores, obtener_usuario_actual
+from db_manager import *
+from datetime import datetime, timedelta
 
 # Inicializar la base de datos
 inicializar_bd()
@@ -22,6 +23,9 @@ def contar_peo():
     Después de incrementar los contadores, los nuevos valores se muestran en la interfaz gráfica 
     y se guardan en la base de datos.
     """
+
+    verificar_y_actualizar_contadores()
+    
     global contador_peos_hoy, contador_peos_semana, contador_peos_mes, contador_peos_ano
 
     # Incrementa los peo_contadores
@@ -45,6 +49,39 @@ def contar_peo():
 
     # Guardar los nuevos peo_contadores en la base de datos
     actualizar_peo_contadores(contador_peos_hoy, contador_peos_semana, contador_peos_mes, contador_peos_ano)
+
+def verificar_y_actualizar_contadores():
+    global contador_peos_hoy, contador_peos_semana, contador_peos_mes, contador_peos_ano
+
+    # Obtener la fecha actual y la última actualización
+    fecha_actual = datetime.now().date()
+    ultima_actualizacion = obtener_ultima_actualizacion()
+
+    if not ultima_actualizacion:
+        actualizar_fecha_actualizacion(fecha_actual)
+        return
+
+    # Verifica si ha pasado un día
+    if fecha_actual > ultima_actualizacion:
+        contador_peos_semana += contador_peos_hoy
+        contador_peos_hoy = 0
+
+        # Verifica si ha pasado una semana (asumiendo inicio lunes)
+        if fecha_actual.isocalendar()[1] > ultima_actualizacion.isocalendar()[1]:
+            contador_peos_mes += contador_peos_semana
+            contador_peos_semana = 0
+
+        # Verifica si ha pasado un mes
+        if fecha_actual.month > ultima_actualizacion.month or fecha_actual.year > ultima_actualizacion.year:
+            contador_peos_ano += contador_peos_mes
+            contador_peos_mes = 0
+
+        # Actualiza la fecha en la base de datos
+        actualizar_fecha_actualizacion(fecha_actual)
+
+        # Guarda los contadores actualizados
+        actualizar_peo_contadores(contador_peos_hoy, contador_peos_semana, contador_peos_mes, contador_peos_ano)
+
 
 # Crear la ventana principal de la aplicación
 ventana = tk.Tk()
